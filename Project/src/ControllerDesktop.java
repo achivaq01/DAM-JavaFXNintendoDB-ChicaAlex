@@ -105,13 +105,13 @@ public class ControllerDesktop implements Initializable{
         URL resource = null;
 
         switch (type) {
-            case "consoles":
+            case "Consoles":
                 resource = this.getClass().getResource("assets/template_info_consola.fxml");
                 break;
-            case "jocs":
+            case "Jocs":
                 resource = this.getClass().getResource("assets/template_info_joc.fxml");
                 break;
-            case "personatges":
+            case "Personatges":
                 resource = this.getClass().getResource("assets/template_info_personatge.fxml");
                 break;
         }

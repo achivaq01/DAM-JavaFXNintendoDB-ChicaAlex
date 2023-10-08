@@ -85,14 +85,13 @@ public class ControllerMobile0 implements Initializable {
         AppData appData = AppData.getInstance();
 
         JSONArray dades = appData.getData(option);
-        URL resource = this.getClass().getResource("/assets/layout_mobile_1.fxml");
+        URL resource = this.getClass().getResource("/assets/template_list_item.fxml");
 
         // Carregar la llista amb les dades
         for (int i = 0; i < dades.length(); i++) {
             JSONObject consoleObject = dades.getJSONObject(i);
             if (consoleObject.has("nom")) {
-                String nom = consoleObject.getString("nom");
-                String imatge = "assets/images/" + consoleObject.getString("imatge");
+                System.out.println("asdaddadadasdad");
                 FXMLLoader loader = new FXMLLoader(resource);
                 Parent itemTemplate = loader.load();
 
