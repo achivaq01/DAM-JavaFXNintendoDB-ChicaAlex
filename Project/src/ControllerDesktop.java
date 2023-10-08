@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class ControllerDesktop implements Initializable{
 
-    String opcions[] = { "Personatges", "Jocs", "Consoles" };
+    String[] opcions = { "Personatges", "Jocs", "Consoles" };
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

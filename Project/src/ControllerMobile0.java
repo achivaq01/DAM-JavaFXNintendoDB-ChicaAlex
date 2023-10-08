@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.json.JSONArray;
@@ -30,6 +31,9 @@ public class ControllerMobile0 implements Initializable {
     @FXML
     private AnchorPane info;
 
+    @FXML
+    private VBox yPane = new VBox();
+
     private String option;
 
 
@@ -40,19 +44,19 @@ public class ControllerMobile0 implements Initializable {
     public void personatges(javafx.event.ActionEvent actionEvent){
         option = "Personatges";
         loadList();
-        UtilsViews.setView("Mobile1");
+        UtilsViews.setView("Mobile2");
     }
 
     public void jocs(javafx.event.ActionEvent actionEvent){
         option = "Jocs";
         loadList();
-        UtilsViews.setView("Mobile1");
+        UtilsViews.setView("Mobile2");
     }
 
     public void consoles(javafx.event.ActionEvent actionEvent){
         option = "Consoles";
         loadList();
-        UtilsViews.setView("Mobile1");
+        UtilsViews.setView("Mobile2");
     }
 
 
@@ -61,6 +65,7 @@ public class ControllerMobile0 implements Initializable {
     }
 
     public void loadList() {
+        // Obtenir una referència a AppData que gestiona les dades
         AppData appData = AppData.getInstance();
 
         // Demanar les dades
@@ -82,24 +87,33 @@ public class ControllerMobile0 implements Initializable {
     }
 
     public void showList() throws Exception {
+
         AppData appData = AppData.getInstance();
 
         JSONArray dades = appData.getData(option);
         URL resource = this.getClass().getResource("/assets/template_list_item.fxml");
 
+        yPane.getChildren().clear();
         // Carregar la llista amb les dades
         for (int i = 0; i < dades.length(); i++) {
             JSONObject consoleObject = dades.getJSONObject(i);
             if (consoleObject.has("nom")) {
-                System.out.println("asdaddadadasdad");
+                String nom = consoleObject.getString("nom");
+                String imatge = "assets/images/" + consoleObject.getString("imatge");
                 FXMLLoader loader = new FXMLLoader(resource);
                 Parent itemTemplate = loader.load();
+                ControllerListItem itemController = loader.getController();
+                itemController.setText(nom);
+                itemController.setImage(imatge);
 
                 final String type = option;
                 final int index = i;
                 itemTemplate.setOnMouseClicked(event -> {
                     showInfo(type, index);
                 });
+
+
+                yPane.getChildren().add(itemTemplate);
 
             }
         }
@@ -108,12 +122,19 @@ public class ControllerMobile0 implements Initializable {
     private void showInfo(String type, int index) {
         AppData appData = AppData.getInstance();
         JSONObject dades = appData.getItemData(type, index);
-        URL resource = switch (type) {
-            case "Consoles" -> this.getClass().getResource("assets/template_info_consola.fxml");
-            case "Jocs" -> this.getClass().getResource("assets/template_info_joc.fxml");
-            case "Personatges" -> this.getClass().getResource("assets/template_info_personatge.fxml");
-            default -> null;
-        };
+        URL resource = null;
+
+        switch (type) {
+            case "Consoles":
+                resource = this.getClass().getResource("assets/template_info_consola.fxml");
+                break;
+            case "Jocs":
+                resource = this.getClass().getResource("assets/template_info_joc.fxml");
+                break;
+            case "Personatges":
+                resource = this.getClass().getResource("assets/template_info_personatge.fxml");
+                break;
+        }
 
         if (resource == null) {
             System.out.println("ControllerDesktop: Error showing info. Could not find template file for type " + type);
