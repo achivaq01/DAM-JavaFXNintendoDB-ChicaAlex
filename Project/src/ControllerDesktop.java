@@ -2,7 +2,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -103,25 +102,51 @@ public class ControllerDesktop implements Initializable{
     private void showInfo(String type, int index) {
         AppData appData = AppData.getInstance();
         JSONObject dades = appData.getItemData(type, index);
-        URL resource = this.getClass().getResource("assets/template_info_item.fxml");
+        URL resource = null;
+
+        switch (type) {
+            case "Consoles":
+                resource = this.getClass().getResource("assets/template_info_item.fxml");
+                break;
+            case "Jocs":
+                resource = this.getClass().getResource("assets/template_info_joc.fxml");
+                break;
+            case "Personatges":
+                resource = this.getClass().getResource("assets/template_info_item.fxml");
+                break;
+        }
+
+        if (resource == null) {
+            System.out.println("ControllerDesktop: Error showing info. Could not find template file for type " + type);
+            return;
+        }
 
         info.getChildren().clear();
         try {
             FXMLLoader loader = new FXMLLoader(resource);
             Parent itemTemplate = loader.load();
-            ControllerInfoItem itemController = loader.getController();
-            itemController.setImage("assets/images/" + dades.getString("imatge"));
-            itemController.setTitle(dades.getString("nom"));
+
             switch (type) {
-                case "Consoles":
-                    itemController.setText(dades.getString("procesador"));
-                    break;
-                case "Jocs":
-                    itemController.setText(dades.getString("descripcio"));
-                    break;
-                case "Personatges":
-                    itemController.setText(dades.getString("nom_del_videojoc"));
-                    break;
+                case "Consoles" -> {
+                    ControllerInfoItem consoleController = loader.getController();
+                    consoleController.setImage("assets/images/" + dades.getString("imatge"));
+                    consoleController.setTitle(dades.getString("nom"));
+                    consoleController.setText(dades.getString("procesador"));
+                }
+                case "Jocs" -> {
+                    ControllerInfoJoc jocController = loader.getController();
+                    jocController.setImgage("assets/images/" + dades.getString("imatge"));
+                    jocController.setTitle(dades.getString("nom"));
+                    jocController.setDate(Integer.toString(dades.getInt("any")));
+                    jocController.setText(dades.getString("descripcio"));
+                    jocController.setType(dades.getString("tipus"));
+                }
+                case "Personatges" -> {
+                    ControllerInfoItem personatgeController = loader.getController();
+                    personatgeController.setImage("assets/images/" + dades.getString("imatge"));
+                    personatgeController.setTitle(dades.getString("nom"));
+                    personatgeController.setText(dades.getString("nom_del_videojoc"));
+                }
             }
 
             info.getChildren().add(itemTemplate);
@@ -131,7 +156,7 @@ public class ControllerDesktop implements Initializable{
             AnchorPane.setLeftAnchor(itemTemplate, 0.0);
         } catch (Exception e) {
             System.out.println("ControllerDesktop: Error showing info.");
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
