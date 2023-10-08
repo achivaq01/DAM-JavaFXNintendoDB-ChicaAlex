@@ -106,13 +106,13 @@ public class ControllerDesktop implements Initializable{
 
         switch (type) {
             case "Consoles":
-                resource = this.getClass().getResource("assets/template_info_item.fxml");
+                resource = this.getClass().getResource("assets/template_info_consola.fxml");
                 break;
             case "Jocs":
                 resource = this.getClass().getResource("assets/template_info_joc.fxml");
                 break;
             case "Personatges":
-                resource = this.getClass().getResource("assets/template_info_item.fxml");
+                resource = this.getClass().getResource("assets/template_info_personatge.fxml");
                 break;
         }
 
@@ -128,10 +128,13 @@ public class ControllerDesktop implements Initializable{
 
             switch (type) {
                 case "Consoles" -> {
-                    ControllerInfoItem consoleController = loader.getController();
+                    ControllerInfoConsola consoleController = loader.getController();
                     consoleController.setImage("assets/images/" + dades.getString("imatge"));
                     consoleController.setTitle(dades.getString("nom"));
-                    consoleController.setText(dades.getString("procesador"));
+                    consoleController.setProcessor(dades.getString("procesador"));
+                    consoleController.setColor(dades.getString("color"));
+                    consoleController.setDate(dades.getString("data"));
+                    consoleController.setSales(Integer.toString(dades.getInt("venudes")));
                 }
                 case "Jocs" -> {
                     ControllerInfoJoc jocController = loader.getController();
@@ -142,9 +145,10 @@ public class ControllerDesktop implements Initializable{
                     jocController.setType(dades.getString("tipus"));
                 }
                 case "Personatges" -> {
-                    ControllerInfoItem personatgeController = loader.getController();
+                    ControllerInfoPersonatge personatgeController = loader.getController();
                     personatgeController.setImage("assets/images/" + dades.getString("imatge"));
                     personatgeController.setTitle(dades.getString("nom"));
+                    personatgeController.setColor(dades.getString("color"));
                     personatgeController.setText(dades.getString("nom_del_videojoc"));
                 }
             }
